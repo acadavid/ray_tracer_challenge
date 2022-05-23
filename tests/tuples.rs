@@ -3,6 +3,7 @@
 mod tuples {
   use std::ops::{Add, Sub, Neg};
 
+  #[derive(Debug, PartialEq)]
   struct Tuple {
     x: f32,
     y: f32,
@@ -21,14 +22,6 @@ mod tuples {
 
     fn to_array(&self) -> [f32; 4] {
       [self.x, self.y, self.z, self.w]
-    }
-
-    fn is_equal_to(&self, t: Tuple) -> bool {
-      if (self.x - t.x).abs() < f32::EPSILON && (self.y - t.y).abs() < f32::EPSILON && (self.z - t.z).abs() < f32::EPSILON && (self.w - t.w).abs() < f32::EPSILON {
-        true
-      } else {
-        false
-      }
     }
   }
 
@@ -101,7 +94,7 @@ mod tuples {
   }
 
   #[test]
-  fn tuple_with_w_zero_us_a_vector() {
+  fn tuple_with_w_zero_is_a_vector() {
     let a = build_tuple(4.3, -4.2, 3.1, 0.0);
 
     assert_eq!(a.x, 4.3);
@@ -115,7 +108,7 @@ mod tuples {
     let a = build_tuple(4.3, -4.2, 3.1, 0.0);
     let b = build_tuple(4.3, -4.2, 3.1, 0.0);
 
-    assert_eq!(a.is_equal_to(b), true)
+    assert_eq!(a == b, true)
   }
 
   #[test]
@@ -123,7 +116,7 @@ mod tuples {
     let a = build_tuple(4.3, -4.2, 3.1, 0.0);
     let b = build_tuple(4.3, -4.2001, 3.1, 0.0);
 
-    assert_eq!(a.is_equal_to(b), false)
+    assert_eq!(a == b, false)
   }
 
   #[test]
@@ -195,10 +188,7 @@ mod tuples {
   fn negate_tuple() {
     let a = build_tuple(3.0, 2.0, 1.0, 1.0);
 
-    assert_eq!(-a.x, -3.0);
-    assert_eq!(-a.y, -2.0);
-    assert_eq!(-a.z, -1.0);
-    assert_eq!(-a.w, -1.0);
+    assert_eq!(Tuple {x: -3.0, y: -2.0, z: -1.0, w: -1.0}, -a);
   }
 
   // Tests for build functions
