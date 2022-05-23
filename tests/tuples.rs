@@ -1,7 +1,6 @@
-
 #[cfg(test)]
 mod tuples {
-  use std::ops::{Add, Sub, Neg};
+  use std::ops::{Add, Neg, Sub};
 
   #[derive(Debug, PartialEq)]
   struct Tuple {
@@ -33,7 +32,7 @@ mod tuples {
         x: self.x * -1.0,
         y: self.y * -1.0,
         z: self.z * -1.0,
-        w: self.w * -1.0
+        w: self.w * -1.0,
       }
     }
   }
@@ -46,11 +45,11 @@ mod tuples {
         x: self.x + t.x,
         y: self.y + t.y,
         z: self.z + t.z,
-        w: self.w + t.w
+        w: self.w + t.w,
       }
     }
-
   }
+
   impl Sub for Tuple {
     type Output = Self;
 
@@ -59,7 +58,7 @@ mod tuples {
         x: self.x - t.x,
         y: self.y - t.y,
         z: self.z - t.z,
-        w: self.w - t.w
+        w: self.w - t.w,
       }
     }
   }
@@ -188,7 +187,15 @@ mod tuples {
   fn negate_tuple() {
     let a = build_tuple(3.0, 2.0, 1.0, 1.0);
 
-    assert_eq!(Tuple {x: -3.0, y: -2.0, z: -1.0, w: -1.0}, -a);
+    assert_eq!(
+      Tuple {
+        x: -3.0,
+        y: -2.0,
+        z: -1.0,
+        w: -1.0
+      },
+      -a
+    );
   }
 
   // Tests for build functions
