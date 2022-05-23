@@ -1,5 +1,8 @@
+
 #[cfg(test)]
 mod tuples {
+  use std::ops::{Add, Sub, Neg};
+
   struct Tuple {
     x: f32,
     y: f32,
@@ -27,27 +30,9 @@ mod tuples {
         false
       }
     }
-
-    fn add(&self, t: Tuple) -> Tuple {
-      Tuple {
-        x: self.x + t.x,
-        y: self.y + t.y,
-        z: self.z + t.z,
-        w: self.w + t.w
-      }
-    }
-
-    fn substract(&self, t: Tuple) -> Tuple {
-      Tuple {
-        x: self.x - t.x,
-        y: self.y - t.y,
-        z: self.z - t.z,
-        w: self.w - t.w
-      }
-    }
   }
 
-  impl std::ops::Neg for Tuple {
+  impl Neg for Tuple {
     type Output = Self;
 
     fn neg(self) -> Self {
@@ -56,6 +41,32 @@ mod tuples {
         y: self.y * -1.0,
         z: self.z * -1.0,
         w: self.w * -1.0
+      }
+    }
+  }
+
+  impl Add for Tuple {
+    type Output = Self;
+
+    fn add(self, t: Self) -> Self {
+      Self {
+        x: self.x + t.x,
+        y: self.y + t.y,
+        z: self.z + t.z,
+        w: self.w + t.w
+      }
+    }
+
+  }
+  impl Sub for Tuple {
+    type Output = Self;
+
+    fn sub(self, t: Self) -> Self {
+      Self {
+        x: self.x - t.x,
+        y: self.y - t.y,
+        z: self.z - t.z,
+        w: self.w - t.w
       }
     }
   }
@@ -120,7 +131,7 @@ mod tuples {
     let a = build_point(3.0, -2.0, 5.0);
     let b = build_vector(-2.0, 3.0, 1.0);
 
-    let res = a.add(b);
+    let res = a + b;
 
     assert_eq!(res.x, 1.0);
     assert_eq!(res.y, 1.0);
@@ -133,7 +144,7 @@ mod tuples {
     let a = build_vector(3.0, -2.0, 5.0);
     let b = build_vector(2.0, 3.0, 1.0);
 
-    let res = a.add(b);
+    let res = a + b;
 
     assert_eq!(res.x, 5.0);
     assert_eq!(res.y, 1.0);
@@ -146,7 +157,7 @@ mod tuples {
     let a = build_point(3.0, 2.0, 1.0);
     let b = build_point(5.0, 6.0, 7.0);
 
-    let res = a.substract(b);
+    let res = a - b;
 
     assert_eq!(res.x, -2.0);
     assert_eq!(res.y, -4.0);
@@ -159,7 +170,7 @@ mod tuples {
     let a = build_point(3.0, 2.0, 1.0);
     let b = build_vector(5.0, 6.0, 7.0);
 
-    let res = a.substract(b);
+    let res = a - b;
 
     assert_eq!(res.x, -2.0);
     assert_eq!(res.y, -4.0);
@@ -172,7 +183,7 @@ mod tuples {
     let a = build_vector(3.0, 2.0, 1.0);
     let b = build_vector(5.0, 6.0, 7.0);
 
-    let res = a.substract(b);
+    let res = a - b;
 
     assert_eq!(res.x, -2.0);
     assert_eq!(res.y, -4.0);
