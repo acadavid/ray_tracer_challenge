@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tuples {
-  use std::ops::{Add, Neg, Sub};
+  use std::ops::{Add, Neg, Sub, Mul, Div};
 
   #[derive(Debug, PartialEq)]
   struct Tuple {
@@ -59,6 +59,32 @@ mod tuples {
         y: self.y - t.y,
         z: self.z - t.z,
         w: self.w - t.w,
+      }
+    }
+  }
+
+ impl Mul<f32> for Tuple {
+    type Output = Self;
+
+    fn mul(self, s: f32) -> Self {
+      Self {
+        x: self.x * s,
+        y: self.y * s,
+        z: self.z * s,
+        w: self.w * s,
+      }
+    }
+  }
+
+  impl Div<f32> for Tuple {
+    type Output = Self;
+
+    fn div(self, s: f32) -> Self {
+      Self {
+        x: self.x / s,
+        y: self.y / s,
+        z: self.z / s,
+        w: self.w / s,
       }
     }
   }
@@ -181,6 +207,32 @@ mod tuples {
     assert_eq!(res.y, -4.0);
     assert_eq!(res.z, -6.0);
     assert_eq!(res.is_vector(), true);
+  }
+
+  #[test]
+  fn multiply_tuple_by_scalar() {
+    let a = build_tuple(1.0, -2.0, 3.0, -4.0);
+    let b = 2.0;
+
+    let res = a * b;
+
+    assert_eq!(res.x, 2.0);
+    assert_eq!(res.y, -4.0);
+    assert_eq!(res.z, 6.0);
+    assert_eq!(res.w, -8.0);
+  }
+
+  #[test]
+  fn divide_tuple_by_scalar() {
+    let a = build_tuple(6.0, -7.0, 8.0, -9.0);
+    let b = 2.0;
+
+    let res = a / b;
+
+    assert_eq!(res.x, 3.0);
+    assert_eq!(res.y, -3.5);
+    assert_eq!(res.z, 4.0);
+    assert_eq!(res.w, -4.5);
   }
 
   #[test]
