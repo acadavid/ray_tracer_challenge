@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tuples {
-  use std::ops::{Add, Neg, Sub, Mul, Div};
+  use std::ops::{Add, Div, Mul, Neg, Sub};
 
   #[derive(Debug, PartialEq)]
   struct Tuple {
@@ -21,6 +21,16 @@ mod tuples {
 
     fn to_array(&self) -> [f32; 4] {
       [self.x, self.y, self.z, self.w]
+    }
+
+    fn magnitude(&self) -> f32 {
+      return (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt();
+    }
+
+    fn normalize(&self) -> Tuple {
+      let m = self.magnitude();
+
+      return build_vector(self.x / m, self.y / m, self.z / m);
     }
   }
 
@@ -63,7 +73,7 @@ mod tuples {
     }
   }
 
- impl Mul<f32> for Tuple {
+  impl Mul<f32> for Tuple {
     type Output = Self;
 
     fn mul(self, s: f32) -> Self {
@@ -104,6 +114,20 @@ mod tuples {
 
   fn build_vector(x: f32, y: f32, z: f32) -> Tuple {
     build_tuple(x, y, z, 0.0)
+  }
+
+  // Tests for build functions
+  #[test]
+  fn build_point_creates_point() {
+    assert_eq!(build_point(4.3, -4.2, 3.1).w, 1.0)
+  }
+
+  #[test]
+  fn build_point_creates_vector() {
+    assert_eq!(
+      build_vector(4.3, -4.2, 3.1).to_array(),
+      [4.3, -4.2, 3.1, 0.0]
+    );
   }
 
   #[test]
@@ -151,7 +175,15 @@ mod tuples {
 
     let res = a + b;
 
-    assert_eq!(Tuple {x: 1.0, y: 1.0, z: 6.0, w: 1.0}, res);
+    assert_eq!(
+      Tuple {
+        x: 1.0,
+        y: 1.0,
+        z: 6.0,
+        w: 1.0
+      },
+      res
+    );
     assert_eq!(res.is_point(), true);
   }
 
@@ -162,7 +194,15 @@ mod tuples {
 
     let res = a + b;
 
-    assert_eq!(Tuple {x: 5.0, y: 1.0, z: 6.0, w: 0.0}, res);
+    assert_eq!(
+      Tuple {
+        x: 5.0,
+        y: 1.0,
+        z: 6.0,
+        w: 0.0
+      },
+      res
+    );
     assert_eq!(res.is_vector(), true);
   }
 
@@ -173,7 +213,15 @@ mod tuples {
 
     let res = a - b;
 
-    assert_eq!(Tuple {x: -2.0, y: -4.0, z: -6.0, w: 0.0}, res);
+    assert_eq!(
+      Tuple {
+        x: -2.0,
+        y: -4.0,
+        z: -6.0,
+        w: 0.0
+      },
+      res
+    );
     assert_eq!(res.is_vector(), true);
   }
 
@@ -184,7 +232,15 @@ mod tuples {
 
     let res = a - b;
 
-    assert_eq!(Tuple {x: -2.0, y: -4.0, z: -6.0, w: 1.0}, res);
+    assert_eq!(
+      Tuple {
+        x: -2.0,
+        y: -4.0,
+        z: -6.0,
+        w: 1.0
+      },
+      res
+    );
     assert_eq!(res.is_point(), true);
   }
 
@@ -195,7 +251,15 @@ mod tuples {
 
     let res = a - b;
 
-    assert_eq!(Tuple {x: -2.0, y: -4.0, z: -6.0, w: 0.0}, res);
+    assert_eq!(
+      Tuple {
+        x: -2.0,
+        y: -4.0,
+        z: -6.0,
+        w: 0.0
+      },
+      res
+    );
     assert_eq!(res.is_vector(), true);
   }
 
@@ -206,7 +270,15 @@ mod tuples {
 
     let res = a * b;
 
-    assert_eq!(Tuple {x: 2.0, y: -4.0, z: 6.0, w: -8.0}, res);
+    assert_eq!(
+      Tuple {
+        x: 2.0,
+        y: -4.0,
+        z: 6.0,
+        w: -8.0
+      },
+      res
+    );
   }
 
   #[test]
@@ -216,27 +288,74 @@ mod tuples {
 
     let res = a / b;
 
-    assert_eq!(Tuple {x: 3.0, y: -3.5, z: 4.0, w: -4.5}, res);
+    assert_eq!(
+      Tuple {
+        x: 3.0,
+        y: -3.5,
+        z: 4.0,
+        w: -4.5
+      },
+      res
+    );
   }
 
   #[test]
   fn negate_tuple() {
     let a = build_tuple(3.0, 2.0, 1.0, 1.0);
 
-    assert_eq!(Tuple {x: -3.0, y: -2.0, z: -1.0, w: -1.0}, -a);
-  }
-
-  // Tests for build functions
-  #[test]
-  fn build_point_creates_point() {
-    assert_eq!(build_point(4.3, -4.2, 3.1).w, 1.0)
-  }
-
-  #[test]
-  fn build_point_creates_vector() {
     assert_eq!(
-      build_vector(4.3, -4.2, 3.1).to_array(),
-      [4.3, -4.2, 3.1, 0.0]
+      Tuple {
+        x: -3.0,
+        y: -2.0,
+        z: -1.0,
+        w: -1.0
+      },
+      -a
     );
+  }
+
+  #[test]
+  fn compute_vector_magnitud() {
+    let v = build_vector(-1.0, -2.0, -3.0);
+
+    let radicand = 14.0_f32;
+    assert_eq!(v.magnitude(), radicand.sqrt())
+  }
+
+  #[test]
+  fn compute_unit_vector_magnitud() {
+    let v1 = build_vector(1.0, 0.0, 0.0);
+    let v2 = build_vector(0.0, 1.0, 0.0);
+    let v3 = build_vector(0.0, 0.0, 1.0);
+
+    assert_eq!(v1.magnitude(), 1.0);
+    assert_eq!(v2.magnitude(), 1.0);
+    assert_eq!(v3.magnitude(), 1.0);
+  }
+
+  #[test]
+  fn normalize_vectors() {
+    let v = build_vector(4.0, 0.0, 0.0);
+    let v2 = build_vector(1.0, 2.0, 3.0);
+
+    let radicand = 14.0_f32;
+    assert_eq!(
+      v.normalize(),
+      Tuple {
+        x: 1.0,
+        y: 0.0,
+        z: 0.0,
+        w: 0.0
+      }
+    );
+    assert_eq!(
+      v2.normalize(),
+      Tuple {
+        x: 1.0 / radicand.sqrt(),
+        y: 2.0 / radicand.sqrt(),
+        z: 3.0 / radicand.sqrt(),
+        w: 0.0
+      }
+    )
   }
 }
