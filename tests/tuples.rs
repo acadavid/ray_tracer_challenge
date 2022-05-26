@@ -151,9 +151,7 @@ mod tuples {
 
     let res = a + b;
 
-    assert_eq!(res.x, 1.0);
-    assert_eq!(res.y, 1.0);
-    assert_eq!(res.z, 6.0);
+    assert_eq!(Tuple {x: 1.0, y: 1.0, z: 6.0, w: 1.0}, res);
     assert_eq!(res.is_point(), true);
   }
 
@@ -164,9 +162,7 @@ mod tuples {
 
     let res = a + b;
 
-    assert_eq!(res.x, 5.0);
-    assert_eq!(res.y, 1.0);
-    assert_eq!(res.z, 6.0);
+    assert_eq!(Tuple {x: 5.0, y: 1.0, z: 6.0, w: 0.0}, res);
     assert_eq!(res.is_vector(), true);
   }
 
@@ -177,9 +173,7 @@ mod tuples {
 
     let res = a - b;
 
-    assert_eq!(res.x, -2.0);
-    assert_eq!(res.y, -4.0);
-    assert_eq!(res.z, -6.0);
+    assert_eq!(Tuple {x: -2.0, y: -4.0, z: -6.0, w: 0.0}, res);
     assert_eq!(res.is_vector(), true);
   }
 
@@ -190,9 +184,7 @@ mod tuples {
 
     let res = a - b;
 
-    assert_eq!(res.x, -2.0);
-    assert_eq!(res.y, -4.0);
-    assert_eq!(res.z, -6.0);
+    assert_eq!(Tuple {x: -2.0, y: -4.0, z: -6.0, w: 1.0}, res);
     assert_eq!(res.is_point(), true);
   }
 
@@ -203,9 +195,7 @@ mod tuples {
 
     let res = a - b;
 
-    assert_eq!(res.x, -2.0);
-    assert_eq!(res.y, -4.0);
-    assert_eq!(res.z, -6.0);
+    assert_eq!(Tuple {x: -2.0, y: -4.0, z: -6.0, w: 0.0}, res);
     assert_eq!(res.is_vector(), true);
   }
 
@@ -216,10 +206,7 @@ mod tuples {
 
     let res = a * b;
 
-    assert_eq!(res.x, 2.0);
-    assert_eq!(res.y, -4.0);
-    assert_eq!(res.z, 6.0);
-    assert_eq!(res.w, -8.0);
+    assert_eq!(Tuple {x: 2.0, y: -4.0, z: 6.0, w: -8.0}, res);
   }
 
   #[test]
@@ -229,25 +216,14 @@ mod tuples {
 
     let res = a / b;
 
-    assert_eq!(res.x, 3.0);
-    assert_eq!(res.y, -3.5);
-    assert_eq!(res.z, 4.0);
-    assert_eq!(res.w, -4.5);
+    assert_eq!(Tuple {x: 3.0, y: -3.5, z: 4.0, w: -4.5}, res);
   }
 
   #[test]
   fn negate_tuple() {
     let a = build_tuple(3.0, 2.0, 1.0, 1.0);
 
-    assert_eq!(
-      Tuple {
-        x: -3.0,
-        y: -2.0,
-        z: -1.0,
-        w: -1.0
-      },
-      -a
-    );
+    assert_eq!(Tuple {x: -3.0, y: -2.0, z: -1.0, w: -1.0}, -a);
   }
 
   // Tests for build functions
