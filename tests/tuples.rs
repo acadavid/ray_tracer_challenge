@@ -2,7 +2,7 @@
 mod tuples {
   use std::ops::{Add, Div, Mul, Neg, Sub};
 
-  #[derive(Debug, PartialEq)]
+  #[derive(Debug, PartialEq, Clone, Copy)]
   struct Tuple {
     x: f32,
     y: f32,
@@ -31,6 +31,18 @@ mod tuples {
       let m = self.magnitude();
 
       return build_vector(self.x / m, self.y / m, self.z / m);
+    }
+
+    fn dot(&self, v: Tuple) -> f32 {
+      return (self.x * v.x) + (self.y * v.y) + (self.z * v.z) + (self.w * v.w);
+    }
+
+    fn cross(&self, v: Tuple) -> Tuple {
+      return build_vector(
+        self.y * v.z - self.z * v.y,
+        self.z * v.x - self.x * v.z,
+        self.x * v.y - self.y * v.x,
+      );
     }
   }
 
@@ -357,5 +369,22 @@ mod tuples {
         w: 0.0
       }
     )
+  }
+
+  #[test]
+  fn dot_product_two_vectors() {
+    let v = build_vector(1.0, 2.0, 3.0);
+    let v2 = build_vector(2.0, 3.0, 4.0);
+
+    assert_eq!(v.dot(v2), 20.0);
+  }
+
+  #[test]
+  fn cross_product_two_vectors() {
+    let v = build_vector(1.0, 2.0, 3.0);
+    let v2 = build_vector(2.0, 3.0, 4.0);
+
+    assert_eq!(v.cross(v2), build_vector(-1.0, 2.0, -1.0));
+    assert_eq!(v2.cross(v), build_vector(1.0, -2.0, 1.0));
   }
 }
