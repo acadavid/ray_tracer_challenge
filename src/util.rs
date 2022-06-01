@@ -1,132 +1,134 @@
+use std::ops::{Add, Div, Mul, Neg, Sub};
+
+#[derive(Debug, PartialEq, Clone, Copy)]
+pub struct Tuple {
+  pub x: f32,
+  pub y: f32,
+  pub z: f32,
+  pub w: f32,
+}
+
+impl Tuple {
+  pub fn is_point(&self) -> bool {
+    self.w == 1.0
+  }
+
+  pub fn is_vector(&self) -> bool {
+    self.w == 0.0
+  }
+
+  pub fn to_array(&self) -> [f32; 4] {
+    [self.x, self.y, self.z, self.w]
+  }
+
+  pub fn magnitude(&self) -> f32 {
+    return (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt();
+  }
+
+  pub fn normalize(&self) -> Tuple {
+    let m = self.magnitude();
+
+    return build_vector(self.x / m, self.y / m, self.z / m);
+  }
+
+  pub fn dot(&self, v: Tuple) -> f32 {
+    return (self.x * v.x) + (self.y * v.y) + (self.z * v.z) + (self.w * v.w);
+  }
+
+  pub fn cross(&self, v: Tuple) -> Tuple {
+    return build_vector(
+      self.y * v.z - self.z * v.y,
+      self.z * v.x - self.x * v.z,
+      self.x * v.y - self.y * v.x,
+    );
+  }
+}
+
+impl Neg for Tuple {
+  type Output = Self;
+
+  fn neg(self) -> Self {
+    Self {
+      x: self.x * -1.0,
+      y: self.y * -1.0,
+      z: self.z * -1.0,
+      w: self.w * -1.0,
+    }
+  }
+}
+
+impl Add for Tuple {
+  type Output = Self;
+
+  fn add(self, t: Self) -> Self {
+    Self {
+      x: self.x + t.x,
+      y: self.y + t.y,
+      z: self.z + t.z,
+      w: self.w + t.w,
+    }
+  }
+}
+
+impl Sub for Tuple {
+  type Output = Self;
+
+  fn sub(self, t: Self) -> Self {
+    Self {
+      x: self.x - t.x,
+      y: self.y - t.y,
+      z: self.z - t.z,
+      w: self.w - t.w,
+    }
+  }
+}
+
+impl Mul<f32> for Tuple {
+  type Output = Self;
+
+  fn mul(self, s: f32) -> Self {
+    Self {
+      x: self.x * s,
+      y: self.y * s,
+      z: self.z * s,
+      w: self.w * s,
+    }
+  }
+}
+
+impl Div<f32> for Tuple {
+  type Output = Self;
+
+  fn div(self, s: f32) -> Self {
+    Self {
+      x: self.x / s,
+      y: self.y / s,
+      z: self.z / s,
+      w: self.w / s,
+    }
+  }
+}
+
+fn build_tuple(x: f32, y: f32, z: f32, w: f32) -> Tuple {
+  Tuple {
+    x: x,
+    y: y,
+    z: z,
+    w: w,
+  }
+}
+
+pub fn build_point(x: f32, y: f32, z: f32) -> Tuple {
+  build_tuple(x, y, z, 1.0)
+}
+
+pub fn build_vector(x: f32, y: f32, z: f32) -> Tuple {
+  build_tuple(x, y, z, 0.0)
+}
+
 #[cfg(test)]
-mod tuples {
-  use std::ops::{Add, Div, Mul, Neg, Sub};
-
-  #[derive(Debug, PartialEq, Clone, Copy)]
-  struct Tuple {
-    x: f32,
-    y: f32,
-    z: f32,
-    w: f32,
-  }
-
-  impl Tuple {
-    fn is_point(&self) -> bool {
-      self.w == 1.0
-    }
-
-    fn is_vector(&self) -> bool {
-      self.w == 0.0
-    }
-
-    fn to_array(&self) -> [f32; 4] {
-      [self.x, self.y, self.z, self.w]
-    }
-
-    fn magnitude(&self) -> f32 {
-      return (self.x.powi(2) + self.y.powi(2) + self.z.powi(2) + self.w.powi(2)).sqrt();
-    }
-
-    fn normalize(&self) -> Tuple {
-      let m = self.magnitude();
-
-      return build_vector(self.x / m, self.y / m, self.z / m);
-    }
-
-    fn dot(&self, v: Tuple) -> f32 {
-      return (self.x * v.x) + (self.y * v.y) + (self.z * v.z) + (self.w * v.w);
-    }
-
-    fn cross(&self, v: Tuple) -> Tuple {
-      return build_vector(
-        self.y * v.z - self.z * v.y,
-        self.z * v.x - self.x * v.z,
-        self.x * v.y - self.y * v.x,
-      );
-    }
-  }
-
-  impl Neg for Tuple {
-    type Output = Self;
-
-    fn neg(self) -> Self {
-      Self {
-        x: self.x * -1.0,
-        y: self.y * -1.0,
-        z: self.z * -1.0,
-        w: self.w * -1.0,
-      }
-    }
-  }
-
-  impl Add for Tuple {
-    type Output = Self;
-
-    fn add(self, t: Self) -> Self {
-      Self {
-        x: self.x + t.x,
-        y: self.y + t.y,
-        z: self.z + t.z,
-        w: self.w + t.w,
-      }
-    }
-  }
-
-  impl Sub for Tuple {
-    type Output = Self;
-
-    fn sub(self, t: Self) -> Self {
-      Self {
-        x: self.x - t.x,
-        y: self.y - t.y,
-        z: self.z - t.z,
-        w: self.w - t.w,
-      }
-    }
-  }
-
-  impl Mul<f32> for Tuple {
-    type Output = Self;
-
-    fn mul(self, s: f32) -> Self {
-      Self {
-        x: self.x * s,
-        y: self.y * s,
-        z: self.z * s,
-        w: self.w * s,
-      }
-    }
-  }
-
-  impl Div<f32> for Tuple {
-    type Output = Self;
-
-    fn div(self, s: f32) -> Self {
-      Self {
-        x: self.x / s,
-        y: self.y / s,
-        z: self.z / s,
-        w: self.w / s,
-      }
-    }
-  }
-
-  fn build_tuple(x: f32, y: f32, z: f32, w: f32) -> Tuple {
-    Tuple {
-      x: x,
-      y: y,
-      z: z,
-      w: w,
-    }
-  }
-
-  fn build_point(x: f32, y: f32, z: f32) -> Tuple {
-    build_tuple(x, y, z, 1.0)
-  }
-
-  fn build_vector(x: f32, y: f32, z: f32) -> Tuple {
-    build_tuple(x, y, z, 0.0)
-  }
+mod tests {
+  use super::*;
 
   // Tests for build functions
   #[test]
