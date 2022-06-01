@@ -1,6 +1,6 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct Tuple {
   pub x: f32,
   pub y: f32,
@@ -41,6 +41,17 @@ impl Tuple {
       self.z * v.x - self.x * v.z,
       self.x * v.y - self.y * v.x,
     );
+  }
+}
+
+impl PartialEq for Tuple {
+  fn eq(&self, t: &Self) -> bool {
+    let eps = 0.00001;
+
+    return (self.x - t.x).abs() < eps
+      && (self.y - t.y).abs() < eps
+      && (self.z - t.z).abs() < eps
+      && (self.w - t.w).abs() < eps;
   }
 }
 
@@ -96,6 +107,19 @@ impl Mul<f32> for Tuple {
   }
 }
 
+impl Mul<Tuple> for Tuple {
+  type Output = Self;
+
+  fn mul(self, t: Tuple) -> Self {
+    Self {
+      x: self.x * t.x,
+      y: self.y * t.y,
+      z: self.z * t.z,
+      w: self.w * t.w,
+    }
+  }
+}
+
 impl Div<f32> for Tuple {
   type Output = Self;
 
@@ -124,6 +148,10 @@ pub fn build_point(x: f32, y: f32, z: f32) -> Tuple {
 
 pub fn build_vector(x: f32, y: f32, z: f32) -> Tuple {
   build_tuple(x, y, z, 0.0)
+}
+
+pub fn build_color(r: f32, g: f32, b: f32) -> Tuple {
+  build_tuple(r, g, b, 0.0)
 }
 
 #[cfg(test)]
@@ -290,6 +318,25 @@ mod tests {
         y: -4.0,
         z: 6.0,
         w: -8.0
+      },
+      res
+    );
+  }
+
+  #[test]
+  fn multiple_tuple_by_tuple() {
+    // This applies to Colors.
+    let c1 = build_color(1.0, 0.2, 0.4);
+    let c2 = build_color(0.9, 1.0, 0.1);
+
+    let res = c1 * c2;
+
+    assert_eq!(
+      Tuple {
+        x: 0.9,
+        y: 0.2,
+        z: 0.04,
+        w: 0.0
       },
       res
     );
